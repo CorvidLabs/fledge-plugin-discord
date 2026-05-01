@@ -1,0 +1,44 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Resolve symlink chain to find real plugin dir
+SOURCE="${BASH_SOURCE[0]:-$0}"
+while [ -L "$SOURCE" ]; do
+  LINK_DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ "$SOURCE" != /* ]] && SOURCE="$LINK_DIR/$SOURCE"
+done
+BIN_DIR="$(cd -P "$(dirname "$SOURCE")" >/dev/null 2>&1 && pwd)"
+DIR="${FLEDGE_PLUGIN_DIR:-$(cd "$BIN_DIR/.." && pwd)}"
+
+cd "$DIR"
+
+SUB="${1:-help}"
+shift 2>/dev/null || true
+
+case "$SUB" in
+  send)
+    exec bun run src/cli-send.ts "$@"
+    ;;
+  webhook)
+    exec bun run src/index.ts "$@"
+    ;;
+  help|--help|-h)
+    echo "fledge discord — Discord webhook plugin"
+    echo ""
+    echo "Usage:"
+    echo "  fledge discord send <message>     Send a text message to Discord"
+    echo "  fledge discord send --embed <title> <description>  Send an embed"
+    echo "  fledge discord webhook            Start the webhook receiver server"
+    echo ""
+    echo "Environment:"
+    echo "  DISCORD_WEBHOOK_URL   Discord webhook URL (required)"
+    echo "  WEBHOOK_SECRET        HMAC secret for signature verification (optional)"
+    echo "  PORT                  Webhook server port (default: 3100)"
+    ;;
+  *)
+    echo "fledge discord: unknown subcommand '$SUB'" >&2
+    echo "Run 'fledge discord help' for usage" >&2
+    exit 64
+    ;;
+esac

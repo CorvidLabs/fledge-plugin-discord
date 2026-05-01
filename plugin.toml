@@ -1,0 +1,14 @@
+[plugin]
+name = "fledge-plugin-discord"
+version = "0.1.0"
+description = "Discord webhook plugin — send messages and receive webhooks via Discord"
+author = "CorvidLabs"
+
+[[commands]]
+name = "discord"
+description = "Send messages and manage Discord webhooks"
+binary = "bin/fledge-discord"
+
+[hooks]
+build = "bun install"
+post_install = "bun install"
