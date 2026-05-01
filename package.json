@@ -1,0 +1,17 @@
+{
+  "name": "fledge-plugin-ci-discord",
+  "version": "0.1.0",
+  "description": "Discord webhook plugin for CI failure notifications",
+  "type": "module",
+  "scripts": {
+    "start": "bun run src/index.ts",
+    "dev": "bun --watch run src/index.ts",
+    "test": "bun test",
+    "lint": "bunx @biomejs/biome check src/"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.0",
+    "@types/bun": "^1.2.0"
+  }
+}
