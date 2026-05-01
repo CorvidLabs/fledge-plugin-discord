@@ -1,50 +1,45 @@
-interface WorkflowRun {
-  name: string;
-  html_url: string;
-  head_branch: string;
-  head_sha: string;
-  run_number: number;
-  actor: { login: string; avatar_url: string };
-  created_at: string;
+import type { DiscordEmbed, DiscordMessage } from "./discord";
+
+export interface FormatOptions {
+  color?: number;
+  username?: string;
+  avatar_url?: string;
 }
 
-interface Repository {
-  full_name: string;
-  html_url: string;
-}
-
-export interface DiscordEmbed {
-  embeds: Array<{
-    title: string;
-    url: string;
-    color: number;
-    description: string;
-    fields: Array<{ name: string; value: string; inline?: boolean }>;
-    timestamp: string;
-    footer: { text: string; icon_url?: string };
-  }>;
-}
-
-export function formatFailureEmbed(run: WorkflowRun, repo: Repository): DiscordEmbed {
-  const shortSha = run.head_sha.slice(0, 7);
-
-  return {
-    embeds: [
-      {
-        title: `CI Failed: ${run.name} #${run.run_number}`,
-        url: run.html_url,
-        color: 0xed4245, // Discord red
-        description: `Workflow **${run.name}** failed in [${repo.full_name}](${repo.html_url})`,
-        fields: [
-          { name: "Branch", value: `\`${run.head_branch}\``, inline: true },
-          { name: "Commit", value: `\`${shortSha}\``, inline: true },
-          { name: "Triggered by", value: run.actor.login, inline: true },
-        ],
-        timestamp: run.created_at,
-        footer: {
-          text: repo.full_name,
-        },
-      },
-    ],
+export function formatEmbed(
+  title: string,
+  description: string,
+  options: FormatOptions & {
+    url?: string;
+    fields?: Array<{ name: string; value: string; inline?: boolean }>;
+    footer?: string;
+    timestamp?: string;
+  } = {},
+): DiscordMessage {
+  const embed: DiscordEmbed = {
+    title,
+    description,
+    color: options.color ?? 0x5865f2,
   };
+
+  if (options.url) embed.url = options.url;
+  if (options.fields) embed.fields = options.fields;
+  if (options.footer) embed.footer = { text: options.footer };
+  if (options.timestamp) embed.timestamp = options.timestamp;
+
+  const message: DiscordMessage = { embeds: [embed] };
+  if (options.username) message.username = options.username;
+  if (options.avatar_url) message.avatar_url = options.avatar_url;
+
+  return message;
+}
+
+export function formatText(
+  content: string,
+  options: FormatOptions = {},
+): DiscordMessage {
+  const message: DiscordMessage = { content };
+  if (options.username) message.username = options.username;
+  if (options.avatar_url) message.avatar_url = options.avatar_url;
+  return message;
 }

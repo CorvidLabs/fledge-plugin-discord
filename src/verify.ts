@@ -1,17 +1,15 @@
-export function verifyGitHubSignature(
+export function verifyHmacSignature(
   body: string,
   signature: string,
   secret: string,
+  algorithm: "sha256" | "sha1" = "sha256",
 ): boolean {
-  const hmac = new Bun.CryptoHasher("sha256", secret);
+  const hmac = new Bun.CryptoHasher(algorithm, secret);
   hmac.update(body);
-  const expected = `sha256=${hmac.digest("hex")}`;
-  return safeCompare(expected, signature);
-}
+  const expected = `${algorithm}=${hmac.digest("hex")}`;
 
-function safeCompare(a: string, b: string): boolean {
-  if (a.length !== b.length) return false;
-  const bufA = Buffer.from(a);
-  const bufB = Buffer.from(b);
+  if (expected.length !== signature.length) return false;
+  const bufA = Buffer.from(expected);
+  const bufB = Buffer.from(signature);
   return crypto.timingSafeEqual(bufA, bufB);
 }

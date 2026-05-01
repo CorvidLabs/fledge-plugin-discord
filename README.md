@@ -1,44 +1,85 @@
-# fledge-plugin-ci-discord
+# fledge-plugin-discord
 
-Discord webhook plugin for CI failure notifications. Receives GitHub Actions webhook events and posts formatted failure alerts to Discord channels.
+Discord webhook plugin for [Fledge](https://github.com/CorvidLabs/fledge). Receives incoming webhooks from any source and posts to Discord channels.
 
-## How It Works
+## What It Does
 
-1. GitHub Actions sends a webhook on workflow run completion
-2. This service filters for failures only
-3. Posts a formatted embed to your Discord channel via webhook
+1. Listens for POST requests on `/webhook`
+2. Optionally verifies HMAC signatures (GitHub, GitLab, custom services)
+3. Forwards the payload to Discord as a message or embed
 
-## Setup
+Works with CI systems, monitoring tools, deployment pipelines, or anything that can send a webhook.
 
-### 1. Create a Discord Webhook
-
-1. Go to your Discord server → Channel Settings → Integrations → Webhooks
-2. Create a new webhook, copy the URL
-
-### 2. Configure GitHub Webhook
-
-1. Go to your repo → Settings → Webhooks → Add webhook
-2. **Payload URL**: Your deployed instance URL (e.g., `https://your-server.com/webhook/github`)
-3. **Content type**: `application/json`
-4. **Secret**: Generate a secret and set it as `GITHUB_WEBHOOK_SECRET` env var
-5. **Events**: Select "Workflow runs"
-
-### 3. Deploy
+## Quick Start
 
 ```bash
 bun install
-cp .env.example .env
-# Edit .env with your Discord webhook URL and GitHub secret
+
+export DISCORD_WEBHOOK_URL="https://discord.com/api/webhooks/..."
 bun run start
 ```
 
+Then POST to it:
+
+```bash
+# Plain text
+curl -X POST http://localhost:3100/webhook \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Deploy succeeded"}'
+
+# Discord embed format (passed through directly)
+curl -X POST http://localhost:3100/webhook \
+  -H "Content-Type: application/json" \
+  -d '{"embeds": [{"title": "Build Complete", "color": 3066993}]}'
+
+# Any JSON (rendered as code block)
+curl -X POST http://localhost:3100/webhook \
+  -H "Content-Type: application/json" \
+  -d '{"status": "failed", "service": "api"}'
+```
+
+## Signature Verification
+
+Set `WEBHOOK_SECRET` to require HMAC verification. Checks these headers (in order):
+
+- `x-hub-signature-256` (GitHub)
+- `x-signature-256`
+- `x-signature`
+
+```bash
+export WEBHOOK_SECRET="your-shared-secret"
+```
+
+Without `WEBHOOK_SECRET`, all requests are accepted.
+
 ## Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `DISCORD_WEBHOOK_URL` | Discord webhook URL for posting notifications |
-| `GITHUB_WEBHOOK_SECRET` | Secret for verifying GitHub webhook signatures |
-| `PORT` | Server port (default: 3100) |
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `DISCORD_WEBHOOK_URL` | Yes | Discord webhook URL |
+| `WEBHOOK_SECRET` | No | HMAC secret for signature verification |
+| `PORT` | No | Server port (default: 3100) |
+
+## Payload Handling
+
+The plugin auto-detects the payload format:
+
+| Payload | Discord Output |
+|---------|---------------|
+| `{"embeds": [...]}` or `{"content": "..."}` | Passed through as-is |
+| `{"text": "..."}` | Sent as plain message |
+| `{"message": "..."}` | Sent as plain message |
+| Any other JSON | Rendered as a code block |
+
+## Library Usage
+
+You can also import the modules directly:
+
+```typescript
+import { sendDiscordWebhook } from "fledge-plugin-discord/discord";
+import { formatEmbed, formatText } from "fledge-plugin-discord/format";
+import { verifyHmacSignature } from "fledge-plugin-discord/verify";
+```
 
 ## Development
 
@@ -46,6 +87,7 @@ bun run start
 bun install
 bun run dev      # Start with hot reload
 bun test         # Run tests
+bun run lint     # Lint
 ```
 
 ## License

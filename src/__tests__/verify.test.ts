@@ -1,32 +1,37 @@
 import { describe, expect, test } from "bun:test";
-import { verifyGitHubSignature } from "../verify";
+import { verifyHmacSignature } from "../verify";
 
-describe("verifyGitHubSignature", () => {
+describe("verifyHmacSignature", () => {
   const secret = "test-secret";
-  const body = '{"action":"completed"}';
+  const body = '{"event":"deploy"}';
 
-  function computeSignature(payload: string, key: string): string {
-    const hmac = new Bun.CryptoHasher("sha256", key);
+  function computeSignature(payload: string, key: string, algo: "sha256" | "sha1" = "sha256"): string {
+    const hmac = new Bun.CryptoHasher(algo, key);
     hmac.update(payload);
-    return `sha256=${hmac.digest("hex")}`;
+    return `${algo}=${hmac.digest("hex")}`;
   }
 
-  test("accepts valid signature", () => {
+  test("accepts valid sha256 signature", () => {
     const sig = computeSignature(body, secret);
-    expect(verifyGitHubSignature(body, sig, secret)).toBe(true);
+    expect(verifyHmacSignature(body, sig, secret)).toBe(true);
+  });
+
+  test("accepts valid sha1 signature", () => {
+    const sig = computeSignature(body, secret, "sha1");
+    expect(verifyHmacSignature(body, sig, secret, "sha1")).toBe(true);
   });
 
   test("rejects wrong secret", () => {
     const sig = computeSignature(body, "wrong-secret");
-    expect(verifyGitHubSignature(body, sig, secret)).toBe(false);
+    expect(verifyHmacSignature(body, sig, secret)).toBe(false);
   });
 
   test("rejects tampered body", () => {
     const sig = computeSignature(body, secret);
-    expect(verifyGitHubSignature('{"action":"in_progress"}', sig, secret)).toBe(false);
+    expect(verifyHmacSignature('{"event":"hack"}', sig, secret)).toBe(false);
   });
 
   test("rejects malformed signature", () => {
-    expect(verifyGitHubSignature(body, "not-a-valid-sig", secret)).toBe(false);
+    expect(verifyHmacSignature(body, "not-a-valid-sig", secret)).toBe(false);
   });
 });
