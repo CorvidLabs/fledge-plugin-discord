@@ -21,20 +21,40 @@ case "$SUB" in
     exec bun run src/cli-send.ts "$@"
     ;;
   webhook)
-    exec bun run src/index.ts "$@"
+    exec bun run src/cli-webhook.ts "$@"
+    ;;
+  set-url|get-url|list-urls|clear-url)
+    exec bun run src/cli-credentials.ts "$SUB" "$@"
     ;;
   help|--help|-h)
-    echo "fledge discord — Discord webhook plugin"
-    echo ""
-    echo "Usage:"
-    echo "  fledge discord send <message>     Send a text message to Discord"
-    echo "  fledge discord send --embed <title> <description>  Send an embed"
-    echo "  fledge discord webhook            Start the webhook receiver server"
-    echo ""
-    echo "Environment:"
-    echo "  DISCORD_WEBHOOK_URL   Discord webhook URL (required)"
-    echo "  WEBHOOK_SECRET        HMAC secret for signature verification (optional)"
-    echo "  PORT                  Webhook server port (default: 3100)"
+    cat <<'EOF'
+fledge discord — Discord webhook plugin
+
+Usage:
+  fledge discord send <message>                       Send a text message
+  fledge discord send --embed <title> [description]   Send an embed
+  fledge discord send --json '<json>'                 Send raw payload
+  fledge discord send --help                          Full send options
+
+  fledge discord set-url [--name <name>]              Store a webhook URL securely (prompts)
+  fledge discord get-url [--name <name>] [--reveal]   Show stored URL info
+  fledge discord list-urls                            List stored credential names
+  fledge discord clear-url [--name <name>] [--all]    Remove stored URL(s)
+
+  fledge discord webhook                              Start the webhook receiver
+
+Environment:
+  DISCORD_WEBHOOK_URL              Discord webhook URL (overrides stored credentials)
+  WEBHOOK_SECRET                   HMAC secret for signature verification (optional)
+  PORT                             Webhook server port (default: 3100)
+  FLEDGE_DISCORD_CRED_BACKEND      Force backend: keychain | secret-tool | dpapi | file
+
+Resolution order for the active webhook URL:
+  1. --webhook <url> flag
+  2. --name <n> from the secure store
+  3. DISCORD_WEBHOOK_URL env var
+  4. 'default' from the secure store
+EOF
     ;;
   *)
     echo "fledge discord: unknown subcommand '$SUB'" >&2

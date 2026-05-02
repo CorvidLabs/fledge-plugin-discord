@@ -1,18 +1,21 @@
 {
   "name": "fledge-plugin-discord",
   "version": "0.1.0",
-  "description": "Discord webhook plugin for Fledge — receives webhooks and posts to Discord",
+  "description": "Discord webhook plugin for Fledge — send messages and receive incoming webhooks",
   "type": "module",
   "main": "src/index.ts",
   "exports": {
     ".": "./src/index.ts",
     "./discord": "./src/discord.ts",
     "./verify": "./src/verify.ts",
-    "./format": "./src/format.ts"
+    "./format": "./src/format.ts",
+    "./payload": "./src/payload.ts",
+    "./colors": "./src/colors.ts"
   },
   "scripts": {
-    "start": "bun run src/index.ts",
-    "dev": "bun --watch run src/index.ts",
+    "send": "bun run src/cli-send.ts",
+    "webhook": "bun run src/cli-webhook.ts",
+    "dev": "bun --watch run src/cli-webhook.ts",
     "test": "bun test",
     "lint": "bunx @biomejs/biome check src/"
   },
