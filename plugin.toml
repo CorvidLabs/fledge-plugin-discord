@@ -1,6 +1,6 @@
 [plugin]
 name = "fledge-plugin-discord"
-version = "0.1.0"
+version = "0.2.0"
 description = "Discord webhook plugin — send messages and receive webhooks via Discord"
 author = "CorvidLabs"
 
