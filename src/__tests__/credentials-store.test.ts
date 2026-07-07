@@ -6,7 +6,7 @@ describe("openCredentialStore", () => {
 
 	afterEach(() => {
 		if (originalEnv === undefined) {
-			delete process.env.FLEDGE_DISCORD_CRED_BACKEND;
+			Reflect.deleteProperty(process.env, "FLEDGE_DISCORD_CRED_BACKEND");
 		} else {
 			process.env.FLEDGE_DISCORD_CRED_BACKEND = originalEnv;
 		}

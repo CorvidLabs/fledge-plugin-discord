@@ -14,7 +14,7 @@ describe("configDir", () => {
 
 	afterEach(() => {
 		if (originalXdg === undefined) {
-			delete process.env.XDG_CONFIG_HOME;
+			Reflect.deleteProperty(process.env, "XDG_CONFIG_HOME");
 		} else {
 			process.env.XDG_CONFIG_HOME = originalXdg;
 		}
@@ -27,7 +27,7 @@ describe("configDir", () => {
 	});
 
 	test("falls back to ~/.config on POSIX without XDG", () => {
-		delete process.env.XDG_CONFIG_HOME;
+		Reflect.deleteProperty(process.env, "XDG_CONFIG_HOME");
 		if (process.platform !== "win32") {
 			const dir = configDir();
 			expect(dir).toBe(
