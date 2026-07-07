@@ -1,9 +1,13 @@
-export { sendDiscordWebhook } from "./discord";
-export type { DiscordEmbed, DiscordMessage } from "./discord";
-export { formatEmbed, formatText } from "./format";
-export type { FormatOptions } from "./format";
-export { verifyHmacSignature } from "./verify";
-export { toDiscordMessage } from "./payload";
-export { parseColor, NAMED_COLORS } from "./colors";
-export { openCredentialStore, CredentialError, isValidName } from "./credentials";
+export { NAMED_COLORS, parseColor } from "./colors";
 export type { CredentialStore } from "./credentials";
+export {
+	CredentialError,
+	isValidName,
+	openCredentialStore,
+} from "./credentials";
+export type { DiscordEmbed, DiscordMessage } from "./discord";
+export { sendDiscordWebhook } from "./discord";
+export type { FormatOptions } from "./format";
+export { formatEmbed, formatText } from "./format";
+export { toDiscordMessage } from "./payload";
+export { verifyHmacSignature } from "./verify";
