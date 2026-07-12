@@ -1,0 +1,5 @@
+[registry]
+name = "fledge-plugin-discord-trust-wave4"
+
+[specs]
+discord = "specs/discord/discord.spec.md"
