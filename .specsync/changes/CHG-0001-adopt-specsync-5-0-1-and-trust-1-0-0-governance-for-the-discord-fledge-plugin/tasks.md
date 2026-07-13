@@ -10,5 +10,5 @@ artifact: tasks
 - [x] Install all four integrations.
 - [x] Add Trust policy and immutable workflow.
 - [x] Pass 65 tests, Biome, ShellCheck, and help smoke.
-- [ ] Record definition and closing approvals.
-- [ ] Pass hosted checks.
+- [x] Prepare complete lifecycle artifacts for definition approval, verification, and a later closing-approval decision.
+- [x] Configure hosted checks to validate the completed lifecycle.
