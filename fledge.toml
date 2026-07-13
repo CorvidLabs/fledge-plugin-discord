@@ -1,0 +1,11 @@
+# fledge.toml: project task definitions
+[tasks]
+install = "bun install"
+test = "bun test"
+lint = "bun run lint"
+shellcheck = "shellcheck bin/*"
+smoke = "bin/fledge-discord --help"
+
+[lanes.verify]
+description = "Install dependencies, test, lint, and smoke-test the Discord plugin"
+steps = ["install", "test", "lint", "shellcheck", "smoke"]
