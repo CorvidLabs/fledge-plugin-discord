@@ -1,6 +1,6 @@
 ---
 module: discord
-version: 1
+version: 2
 status: active
 files:
   - src/args.ts
@@ -123,3 +123,5 @@ Then the plugin resolves the credential, prints the generated embed payload, and
 | Version | Date | Changes |
 |---------|------|---------|
 | 1 | 2026-07-12 | Document existing Discord sending, receiving, verification, and credential behavior for SpecSync 5 adoption. |
+| 2 | 2026-07-13 | Reconciled existing API documentation and stable requirement IDs for SpecSync 5.0.1 governance; runtime behavior is unchanged. |
+| 2026-07-13 | CHG-0001-adopt-specsync-5-0-1-and-trust-1-0-0-governance-for-the-discord-fledge-plugin: Adopt SpecSync 5.0.1 and Trust 1.0.0 governance for the Discord Fledge plugin |

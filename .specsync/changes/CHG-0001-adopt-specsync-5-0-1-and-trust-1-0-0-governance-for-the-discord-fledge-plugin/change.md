@@ -1,6 +1,6 @@
 ---
 id: CHG-0001-adopt-specsync-5-0-1-and-trust-1-0-0-governance-for-the-discord-fledge-plugin
-state: implementing
+state: accepted
 type: migration
 base_commit: 9e580c3c191c48e5e43dcd5a7379e9b71ec8b3a0
 ---

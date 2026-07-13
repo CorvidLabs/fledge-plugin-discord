@@ -1,0 +1,18 @@
+{
+  "timestamp": 1783953052,
+  "commit": "66a6190db9e1588935f929be0e80b2cf477aab5c",
+  "contract_digest": "37e82c457f9b53abe9dd79e4f353f01fad83d0ede8682f10d21b8e6038922f34",
+  "workspace_digest": "bcb598f599e50e2de0ff0e649326859929c670f580e78f92d5aac4966b8ef3ce",
+  "acceptance_input_digest": "f1dd9f85882d6900f22c4eb8b743e7d2ba6afc84766454d11ea406c0d8ece81c",
+  "passed": true,
+  "commands": [
+    {
+      "command": "fledge lanes run verify",
+      "success": true,
+      "exit_code": 0
+    }
+  ],
+  "requirement_ids": [
+    "REQ-discord-002"
+  ]
+}

@@ -17,6 +17,9 @@ The plugin SHALL send text, embed, and raw JSON payloads and support a network-f
 
 Named webhook URLs SHALL use the selected OS-native secure store or a mode-0600 file fallback and remain hidden unless explicitly revealed.
 
+Acceptance Criteria
+- Existing credential-store, permission, and redaction tests pass without changing runtime behavior.
+
 ### REQ-discord-003
 
 Credential resolution SHALL follow inline, named, environment, then default precedence.
