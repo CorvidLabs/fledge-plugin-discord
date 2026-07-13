@@ -6,6 +6,13 @@
       "timestamp": 1783952601,
       "digest": "c783357f09c2cbe3d2e408a7d694c84009c730884ac1296c7eeb1cf70a34ef50",
       "note": "Definition approved after complete semantic-delta modeling, truthful task preparation, and native verification review."
+    },
+    {
+      "gate": "definition",
+      "actor": "user:0xLeif",
+      "timestamp": 1783953041,
+      "digest": "37e82c457f9b53abe9dd79e4f353f01fad83d0ede8682f10d21b8e6038922f34",
+      "note": "Fresh definition approval after portable verification and requirement-evidence corrections; prior approval history preserved."
     }
   ]
 }

@@ -11,3 +11,4 @@ artifact: testing
 - `bin/fledge-discord --help`
 - `specsync check --strict --require-coverage 100 --force`
 - `fledge trust doctor` and `fledge trust verify`
+- `REQ-discord-002`: credential backend, mode-0600 fallback, and redaction behavior are covered by the Bun test suite.
